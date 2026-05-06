@@ -1,0 +1,26 @@
+/*
+ * Copyright 2026 Jan-Willem Smaal <usenet@gispen.org>
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#include <nxp/mcx/MCXW727CMFTA-pinctrl.h>
+
+&pinctrl {
+	pinmux_lpspi1_slave: pinmux_lpspi1_slave {
+		group0 {
+			pinmux = <LPSPI1_SIN_PTB1>,
+				 <LPSPI1_SOUT_PTB3>,
+				 <LPSPI1_SCK_PTB2>,
+				 <LPSPI1_PCS0_PTB0>;
+			slew-rate = "fast";
+			drive-strength = "high";
+			bias-pull-up;
+		};
+	};
+};
+
+&lpspi1 {
+	status = "okay";
+	pinctrl-0 = <&pinmux_lpspi1_slave>;
+	pinctrl-names = "default";
+};

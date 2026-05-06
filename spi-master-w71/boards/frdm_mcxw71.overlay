@@ -1,0 +1,47 @@
+/*
+ * Copyright 2026 Jan-Willem Smaal <usenet@gispen.org>
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#include <nxp/mcx/MCXW716CMFTA-pinctrl.h>
+
+&pinctrl {
+	/* Custom pinctrl that EXCLUDES PCS0 (PTB0) to avoid conflict */
+	pinmux_lpspi1_master_custom: pinmux_lpspi1_master_custom {
+		group0 {
+			pinmux = <LPSPI1_SIN_PTB1>,
+				 <LPSPI1_SCK_PTB2>,
+				 <LPSPI1_SOUT_PTB3>;
+			slew-rate = "fast";
+			drive-strength = "high";
+		};
+	};
+};
+
+&lpspi1 {
+	status = "okay";
+	pinctrl-0 = <&pinmux_lpspi1_master_custom>;
+	pinctrl-names = "default";
+	
+	/* Multi-slave CS setup */
+	cs-gpios = <&gpiod 1 GPIO_ACTIVE_LOW>,  /* Slave 0 (A0/PTD1) */
+	           <&gpiod 2 GPIO_ACTIVE_LOW>;  /* Slave 1 (A1/PTD2) */
+
+	/delete-node/ flash@0;
+
+	spi_slave_0: spi-slave@0 {
+		compatible = "vnd,spi-device";
+		reg = <0>;
+		spi-max-frequency = <1000000>;
+	};
+
+	spi_slave_1: spi-slave@1 {
+		compatible = "vnd,spi-device";
+		reg = <1>;
+		spi-max-frequency = <1000000>;
+	};
+};
+
+&gpiod {
+	status = "okay";
+};
