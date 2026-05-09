@@ -8,14 +8,20 @@
 &pinctrl {
 	pinmux_lpspi1_slave: pinmux_lpspi1_slave {
 		group0 {
+			/* P3_9 is SDI (Input), P3_10 is SCK, P3_11 is PCS0 */
 			pinmux = <LPSPI1_SDI_P3_9>,
-				 <LPSPI1_SDO_P3_8>,
 				 <LPSPI1_SCK_P3_10>,
 				 <LPSPI1_PCS0_P3_11>;
-			slew-rate = "fast";
-			drive-strength = "high";
 			input-enable;
 			bias-pull-up;
+			drive-strength = "low";
+			slew-rate = "fast";
+		};
+		group1 {
+			/* P3_8 is SDO (Output) */
+			pinmux = <LPSPI1_SDO_P3_8>;
+			drive-strength = "low";
+			slew-rate = "fast";
 		};
 	};
 };
