@@ -14,20 +14,22 @@
 
 static const struct spi_dt_spec slave0 = SPI_DT_SPEC_GET(DT_NODELABEL(spi_slave_0), SPI_OP);
 static const struct spi_dt_spec slave1 = SPI_DT_SPEC_GET(DT_NODELABEL(spi_slave_1), SPI_OP);
+static const struct spi_dt_spec slave2 = SPI_DT_SPEC_GET(DT_NODELABEL(spi_slave_2), SPI_OP);
 
 int main(void)
 {
 	uint8_t tx_data0[] = {0xDE, 0xAD, 0xBE, 0xEF};
 	uint8_t tx_data1[] = {0xCA, 0xFE, 0xCA, 0xFE};
+	uint8_t tx_data2[] = {0xBA, 0xAD, 0xF0, 0x0D};
 	uint8_t rx_data[4];
 	
 	struct spi_buf rx_buf = {.buf = rx_data, .len = sizeof(rx_data)};
 	struct spi_buf_set rx_bufs = {.buffers = &rx_buf, .count = 1};
 
-	printk("\n*** SPI Master (MCXW71) Starting - Unique Dual Payloads ***\n");
+	printk("\n*** SPI Master (MCXW71) Starting - Triple Slave Support ***\n");
 	k_sleep(K_MSEC(5000)); /* Give Slaves time to start */
 
-	if (!spi_is_ready_dt(&slave0) || !spi_is_ready_dt(&slave1)) {
+	if (!spi_is_ready_dt(&slave0) || !spi_is_ready_dt(&slave1) || !spi_is_ready_dt(&slave2)) {
 		printk("Error: SPI devices not ready\n");
 		return 0;
 	}
@@ -55,6 +57,21 @@ int main(void)
 		memset(rx_data, 0, sizeof(rx_data));
 		printk("Master -> Slave 1 (A1): Sending CAFECAFE | ");
 		if (spi_transceive_dt(&slave1, &tx_bufs1, &rx_bufs) == 0) {
+			printk("RX: %02x %02x %02x %02x\n",
+			       rx_data[0], rx_data[1], rx_data[2], rx_data[3]);
+		} else {
+			printk("FAILED\n");
+		}
+
+		k_sleep(K_MSEC(500));
+
+		/* Talk to Slave 2 (BAADF00D) */
+		struct spi_buf tx_buf2 = {.buf = tx_data2, .len = sizeof(tx_data2)};
+		struct spi_buf_set tx_bufs2 = {.buffers = &tx_buf2, .count = 1};
+		
+		memset(rx_data, 0, sizeof(rx_data));
+		printk("Master -> Slave 2 (A3): Sending BAADF00D | ");
+		if (spi_transceive_dt(&slave2, &tx_bufs2, &rx_bufs) == 0) {
 			printk("RX: %02x %02x %02x %02x\n",
 			       rx_data[0], rx_data[1], rx_data[2], rx_data[3]);
 		} else {

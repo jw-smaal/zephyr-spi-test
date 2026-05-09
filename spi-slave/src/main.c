@@ -14,7 +14,8 @@
 #define SPI_OP (SPI_WORD_SET(8) | SPI_TRANSFER_MSB | \
 		SPI_MODE_CPOL | SPI_MODE_CPHA | SPI_OP_MODE_SLAVE)
 
-static const struct device *spi_dev = DEVICE_DT_GET(DT_NODELABEL(lpspi1));
+//static const struct device *spi_dev = DEVICE_DT_GET(DT_NODELABEL(lpspi1));
+static const struct device *spi_dev = DEVICE_DT_GET(DT_ALIAS(spi));
 static struct spi_config spi_cfg = {
 	.operation = SPI_OP,
 	.frequency = 0,

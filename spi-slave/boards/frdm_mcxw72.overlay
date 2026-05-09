@@ -3,8 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include <nxp/mcx/MCXW727CMFTA-pinctrl.h>
-
 &pinctrl {
 	pinmux_lpspi1_slave: pinmux_lpspi1_slave {
 		group0 {
@@ -23,4 +21,10 @@
 	status = "okay";
 	pinctrl-0 = <&pinmux_lpspi1_slave>;
 	pinctrl-names = "default";
+};
+
+/ {
+	aliases {
+		spi = &lpspi1;
+	};
 };

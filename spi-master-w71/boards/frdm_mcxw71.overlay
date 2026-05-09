@@ -25,7 +25,8 @@
 	
 	/* Multi-slave CS setup */
 	cs-gpios = <&gpiod 1 GPIO_ACTIVE_LOW>,  /* Slave 0 (A0/PTD1) */
-	           <&gpiod 2 GPIO_ACTIVE_LOW>;  /* Slave 1 (A1/PTD2) */
+	           <&gpiod 2 GPIO_ACTIVE_LOW>,  /* Slave 1 (A1/PTD2) */
+	           <&gpioa 4 GPIO_ACTIVE_LOW>;  /* Slave 2 (A3/PTA4) */
 
 	/delete-node/ flash@0;
 
@@ -40,8 +41,18 @@
 		reg = <1>;
 		spi-max-frequency = <1000000>;
 	};
+
+	spi_slave_2: spi-slave@2 {
+		compatible = "vnd,spi-device";
+		reg = <2>;
+		spi-max-frequency = <1000000>;
+	};
 };
 
 &gpiod {
+	status = "okay";
+};
+
+&gpioa {
 	status = "okay";
 };
