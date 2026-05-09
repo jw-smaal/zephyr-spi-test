@@ -3,6 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/* It seemed it was set to active high and thus was on all the time */
+&blue_led {
+	gpios = < &gpioc 0x1 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>; 
+};
+
+
 &pinctrl {
 	pinmux_lpspi1_slave: pinmux_lpspi1_slave {
 		group0 {
